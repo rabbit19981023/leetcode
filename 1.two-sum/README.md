@@ -11,7 +11,9 @@ Result:
   int[2] result
 
 Reason:
-  result[0] + result[1] == target
+  a = result[0]
+  b = result[1]
+  nums[a] + nums[b] == target
 ```
 
 ## Examples
