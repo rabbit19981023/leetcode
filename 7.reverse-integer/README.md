@@ -54,7 +54,7 @@ class Solution:
 # main func
   def reverse(self, x: int) -> int:
     result = 0
-    sign = -1 if self.isNegative(x) else 1
+    sign = -1 if x < 0 else 1
     _x = abs(x)
 
     while _x != 0:
@@ -80,9 +80,6 @@ class Solution:
       if sign > 0 and lastNum > 7: return True
       if sign < 0 and lastNum > 8: return True
     return False
-
-  def isNegative(self, x):
-    return x < 0
 
   def getLastNum(self, x):
     return x % 10
