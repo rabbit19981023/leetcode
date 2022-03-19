@@ -6,6 +6,8 @@ Given a signed 32-bit integer `x`, return `x` with its digits reversed.
 
 If reversing `x` causes the value to go outside the signed 32-bit integer range `[-2^31, 2^31 - 1]`, then return `0`.
 
+**Assume the environment does not allow you to store 64-bit integers (signed or unsigned).**
+
 ```
 Given:
   int x
@@ -49,41 +51,37 @@ Output: 21
 
 ```python
 class Solution:
+# main func
   def reverse(self, x: int) -> int:
     result = 0
-    sign = 1
+    sign = -1 if self.isNegative(x) else 1
+    _x = abs(x)
+    while _x != 0:
+      lastNum = self.getLastNum(_x)
 
-    if (self.isNegative(x)):
-      sign *= -1
+      if _x < 10 and self.isOverFlow(result, lastNum, sign):
+        result = 0
+        break
 
-    x = abs(x)
-    for i in reversed(range(self.getDigits(x))):
-      result += self.getLastNum(x) * 10 ** i
-      x = self.removeLastNum(x)
-
-    if (self.isNotValid(result, sign)):
-      result = 0
+      result = result * 10 + lastNum
+      _x = self.removeLastNum(_x)
 
     return result * sign
 
-  def isNotValid(self, result, sign):
-    if (sign > 0):
-      return result >= 2 ** 31
+# utils func
+  def isOverFlow(self, result, lastNum, sign):
+    # for positive int: max = 2 ** 31 - 1
+    # for negative int: min = -2 ** 31
+    LIMIT = (2 ** 31) // 10
 
-    if (sign < 0):
-      return result > 2 ** 31
+    if result > LIMIT: return True
+    if result == LIMIT:
+      if sign > 0 and lastNum > 7: return True
+      if sign < 0 and lastNum > 8: return True
+    return False
 
   def isNegative(self, x):
     return x < 0
-
-  def getDigits(self, x):
-    length = 0
-    
-    while x > 0:
-      length += 1
-      x = x // 10
-
-    return length
 
   def getLastNum(self, x):
     return x % 10
