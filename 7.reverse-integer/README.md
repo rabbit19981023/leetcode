@@ -56,6 +56,7 @@ class Solution:
     result = 0
     sign = -1 if self.isNegative(x) else 1
     _x = abs(x)
+
     while _x != 0:
       lastNum = self.getLastNum(_x)
 
