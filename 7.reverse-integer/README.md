@@ -58,32 +58,32 @@ class Solution:
     _x = abs(x)
 
     while _x != 0:
-      lastNum = self.getLastNum(_x)
+      last_num = self.get_last_num(_x)
 
-      if _x < 10 and self.isOverFlow(result, lastNum, sign):
+      if _x < 10 and self.is_overflow(result, last_num, sign):
         result = 0
         break
 
-      result = result * 10 + lastNum
-      _x = self.removeLastNum(_x)
+      result = result * 10 + last_num
+      _x = self.remove_last_num(_x)
 
     return result * sign
 
 # utils func
-  def isOverFlow(self, result, lastNum, sign):
+  def is_overflow(self, result, last_num, sign):
     # for positive int: max = 2 ** 31 - 1
     # for negative int: min = -2 ** 31
     LIMIT = (2 ** 31) // 10
 
     if result > LIMIT: return True
     if result == LIMIT:
-      if sign > 0 and lastNum > 7: return True
-      if sign < 0 and lastNum > 8: return True
+      if sign > 0 and last_num > 7: return True
+      if sign < 0 and last_num > 8: return True
     return False
 
-  def getLastNum(self, x):
+  def get_last_num(self, x):
     return x % 10
 
-  def removeLastNum(self, x):
+  def remove_last_num(self, x):
     return x // 10
 ```
