@@ -54,36 +54,105 @@ class Solution:
 # main func
   def reverse(self, x: int) -> int:
     result = 0
-    sign = -1 if x < 0 else 1
-    _x = abs(x)
 
-    while _x != 0:
-      last_num = self.get_last_num(_x)
+    while x != 0:
+      last_num = self.get_last_num(x)
 
-      if _x < 10 and self.is_overflow(result, last_num, sign):
+      if x < 10 and x > -10 and self.is_overflow(result, last_num):
         result = 0
         break
 
       result = result * 10 + last_num
-      _x = self.remove_last_num(_x)
+      x = self.remove_last_num(x)
 
-    return result * sign
+    return result
 
-# utils func
-  def is_overflow(self, result, last_num, sign):
-    # for positive int: max = 2 ** 31 - 1
-    # for negative int: min = -2 ** 31
-    LIMIT = (2 ** 31) // 10
+# utils
+  def math_trunc(self, a, b):
+    num = a / b
+    if (num >= 0): return a // b
+    if (num < 0): return a // (b * -1 ) * -1
 
-    if result > LIMIT: return True
-    if result == LIMIT:
-      if sign > 0 and last_num > 7: return True
-      if sign < 0 and last_num > 8: return True
+  def math_mod(self, a, b):
+    remainder = a - b * self.math_trunc(a, b)
+    return remainder
+
+  def is_overflow(self, result, last_num):
+    MAX = 2 ** 31 - 1
+    MIN = -2 ** 31
+
+    if result > 0:
+      LIMIT = self.math_trunc(MAX, 10)
+      if result > LIMIT: return True
+      if result == LIMIT and last_num > 7: return True
+
+    if result < 0:
+      LIMIT = self.math_trunc(MIN, 10)
+      if result < LIMIT: return True
+      if result == LIMIT and last_num < -8: return True
+
     return False
 
   def get_last_num(self, x):
-    return x % 10
+    return self.math_mod(x, 10)
 
   def remove_last_num(self, x):
-    return x // 10
+    return self.math_trunc(x, 10)
+```
+
+### C++
+
+```cpp
+class Solution {
+public:
+// main func
+  int reverse(int x);
+
+// utils
+  bool isOverflow(int result, int lastNum);
+  int getLastNum(int x);
+  int removeLastNum(int x);
+};
+
+int Solution::reverse(int x) {
+  int result = 0;
+
+  while (x != 0) {
+    int lastNum = getLastNum(x);
+
+    if (x < 10 && x > -10 && isOverflow(result, lastNum)) {
+      result = 0;
+      break;
+    }
+
+    result = result * 10 + lastNum;
+    x = removeLastNum(x);
+  }
+
+  return result;
+}
+
+bool Solution::isOverflow(int result, int lastNum) {
+  if (result > 0) {
+    int LIMIT = INT_MAX / 10;
+    if (result > LIMIT) return true;
+    if (result == LIMIT && lastNum > 7) return true;
+  }
+
+  if (result < 0) {
+    int LIMIT = INT_MIN / 10;
+    if (result < LIMIT) return true;
+    if (result == LIMIT && lastNum < -8) return true;
+  }
+
+  return false;
+}
+
+int Solution::getLastNum(int x) {
+  return x % 10;
+}
+
+int Solution::removeLastNum(int x) {
+  return x / 10;
+}
 ```
